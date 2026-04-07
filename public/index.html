@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Questify Pro</title>
+  <!-- Modern Font: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="stylesheet" href="style.css">
+  
+  <!-- Libraries -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to content</a>
+  
+  <!-- HEADER -->
+  <header class="app-header hidden" id="appHeader">
+    <div class="header-inner">
+      <div class="brand" data-nav="home">
+        <div class="logo-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+        </div>
+        <h1>Questify</h1>
+      </div>
+      
+      <nav class="main-nav desktop-nav">
+        <button class="nav-item active" data-nav="home">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+          Dashboard
+        </button>
+        <button class="nav-item" data-nav="create">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          Create
+        </button>
+        <button class="nav-item" data-nav="my-forms">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>
+          My Forms
+        </button>
+        <button class="nav-item hidden" id="adminNav" data-nav="admin">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0110 0v4"></path></svg>
+          Admin
+        </button>
+      </nav>
+      
+      <div class="header-actions">
+        <button class="icon-btn" data-action="theme" title="Toggle Theme">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+        </button>
+        <button class="icon-btn hamburger" id="hamburgerBtn" aria-label="Menu">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+        </button>
+        <div class="user-menu desktop-only">
+          <button class="avatar-btn" id="userMenuBtn">
+            <span class="avatar-initials" id="userName">U</span>
+          </button>
+          <div class="dropdown" id="userDropdown">
+            <button class="drop-item" data-nav="profile">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+              Profile
+            </button>
+            <button class="drop-item danger" data-action="logout">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+              Logout
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MOBILE DRAWER -->
+  <div class="mobile-drawer" id="mobileDrawer">
+    <div class="drawer-header">
+      <div class="brand" style="color:var(--text)">Questify</div>
+      <button class="close-drawer" id="closeDrawerBtn">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+    </div>
+    <nav class="drawer-nav">
+      <button class="nav-item" data-nav="home">Dashboard</button>
+      <button class="nav-item" data-nav="create">Create Form</button>
+      <button class="nav-item" data-nav="my-forms">My Forms</button>
+      <button class="nav-item hidden" id="adminNavMobile" data-nav="admin">Admin</button>
+      <div class="nav-divider"></div>
+      <button class="nav-item" data-nav="profile">Profile</button>
+      <button class="nav-item danger" data-action="logout">Logout</button>
+    </nav>
+  </div>
+  <div class="drawer-backdrop" id="drawerBackdrop"></div>
+
+  <!-- TOASTS -->
+  <div class="toast-container" id="toasts"></div>
+
+  <!-- MAIN CONTENT -->
+  <main id="main" class="main-content">
+    
+    <!-- LOGIN PAGE -->
+    <section class="page" id="page-login">
+      <div class="auth-container">
+        <div class="auth-card">
+          <div class="auth-header">
+            <div class="logo-icon large">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+            </div>
+            <h2>Welcome Back</h2>
+            <p class="subtext">Enter your credentials to access your account</p>
+          </div>
+          <form id="formLogin">
+            <div class="input-group">
+              <label>Email</label>
+              <input type="email" id="loginEmail" required placeholder="name@company.com">
+            </div>
+            <div class="input-group">
+              <label>Password</label>
+              <div class="password-input-wrap">
+                <input type="password" id="loginPass" required placeholder="••••••••">
+                <button type="button" class="toggle-pass" data-target="loginPass">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                </button>
+              </div>
+            </div>
+            <div id="loginError" class="msg error hidden"></div>
+            <button type="submit" class="btn-modern primary full">Sign In</button>
+          </form>
+          <p class="auth-switch">Don't have an account? <a href="#signup" class="link" data-nav="signup">Create Account</a></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SIGNUP PAGE -->
+    <section class="page" id="page-signup">
+      <div class="auth-container">
+        <div class="auth-card">
+          <div class="auth-header">
+            <div class="logo-icon large">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+            </div>
+            <h2>Create Account</h2>
+            <p class="subtext">Start your free workspace today</p>
+          </div>
+          <form id="formSignup">
+            <div class="input-group">
+              <label>Full Name</label>
+              <input type="text" id="signupName" required placeholder="John Doe">
+            </div>
+            <div class="input-group">
+              <label>Email</label>
+              <input type="email" id="signupEmail" required placeholder="name@company.com">
+            </div>
+            <div class="input-group">
+              <label>Password</label>
+              <div class="password-input-wrap">
+                <input type="password" id="signupPass" required placeholder="Min. 8 chars">
+                <button type="button" class="toggle-pass" data-target="signupPass">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                </button>
+              </div>
+              <div class="meter" id="passMeter"><div class="meter-fill"></div></div>
+            </div>
+            <div id="signupError" class="msg error hidden"></div>
+            <button type="submit" class="btn-modern primary full">Create Account</button>
+          </form>
+          <p class="auth-switch">Already registered? <a href="#login" class="link" data-nav="login">Sign In</a></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- HOME DASHBOARD -->
+    <section class="page" id="page-home">
+      <div class="page-header">
+        <div>
+          <h2>Dashboard</h2>
+          <p class="subtext">Overview of your survey performance</p>
+        </div>
+        <button class="btn-modern primary" data-nav="create">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          New Form
+        </button>
+      </div>
+      <div class="stats-grid" id="stats">
+        <div class="stat-card">
+          <div class="stat-icon purple"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg></div>
+          <div class="stat-info"><span class="val" id="statTotal">0</span><span class="lbl">Total Forms</span></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon pink"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></div>
+          <div class="stat-info"><span class="val" id="statResponses">0</span><span class="lbl">Responses</span></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon green"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+          <div class="stat-info"><span class="val" id="statActive">0</span><span class="lbl">Published</span></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon yellow"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg></div>
+          <div class="stat-info"><span class="val" id="statAvg">0</span><span class="lbl">Avg / Form</span></div>
+        </div>
+      </div>
+      <div class="section-head"><h3>Recent Activity</h3></div>
+      <div class="grid" id="recentGrid"></div>
+    </section>
+
+    <!-- CREATE FORM -->
+    <section class="page" id="page-create">
+      <div class="builder">
+        <div class="builder-head">
+          <div>
+            <h2 id="pageTitle">New Form</h2>
+            <p class="subtext">Auto-saves as you type</p>
+          </div>
+          <div class="head-actions">
+            <button class="btn-modern ghost" id="aiGenBtn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10H12V2z"></path><path d="M20.66 10.66a8 8 0 0 0-1.32-4.34L20 7a10 10 0 0 0-4.34 1.32L20 10.66z"></path><path d="M10.66 20.66a8 8 0 0 0 4.34-1.32L15 18a10 10 0 0 0-1.32-4.34L10.66 20.66z"></path></svg>
+              AI Generator
+            </button>
+            <button class="btn-modern ghost" data-action="preview">Preview</button>
+            <button class="btn-modern ghost" data-nav="my-forms">Close</button>
+          </div>
+        </div>
+        <form id="formBuilder">
+          <div class="input-group">
+            <label>Form Title *</label>
+            <input type="text" id="qTitle" required placeholder="e.g., Customer Satisfaction Survey">
+          </div>
+          <div class="input-group">
+            <label>Description</label>
+            <textarea id="qDesc" rows="3" placeholder="Briefly describe the purpose..."></textarea>
+          </div>
+          <div class="input-group">
+            <label>Category</label>
+            <div class="pills" id="catPills"></div>
+          </div>
+          <div id="sectionsContainer"></div>
+          <button type="button" class="add-btn" data-action="add-sec">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            Add Section
+          </button>
+          <div class="builder-footer">
+            <span id="lastSave" style="display:none"></span>
+            <div class="footer-actions">
+              <button type="button" class="btn-modern ghost" data-action="save-draft">Save Draft</button>
+              <button type="button" class="btn-modern primary" data-action="publish">Publish</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- MY FORMS -->
+    <section class="page" id="page-my-forms">
+      <div class="list-head">
+        <h2>My Questionnaires</h2>
+        <div class="filters">
+          <button class="f-btn active" data-filter="all">All</button>
+          <button class="f-btn" data-filter="active">Active</button>
+          <button class="f-btn" data-filter="draft">Drafts</button>
+        </div>
+      </div>
+      <div class="search-box hidden" id="searchBox"><input type="text" id="globalSearch" placeholder="Search forms..."></div>
+      <div class="grid" id="myGrid"></div>
+      <div class="empty-state hidden" id="myEmpty"><div class="empty-icon">📂</div><h3>No forms yet</h3><p>Create your first questionnaire.</p><button class="btn-modern primary" data-nav="create">Create Form</button></div>
+    </section>
+
+    <!-- ADMIN -->
+    <section class="page" id="page-admin">
+      <div class="panel-head"><h3>Admin Console</h3><p class="subtext">Manage users and system access</p></div>
+      <div class="table-wrap"><table class="data-table"><thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Joined</th><th>Actions</th></tr></thead><tbody id="adminBody"></tbody></table></div>
+    </section>
+
+    <!-- TAKE FORM (RESPONDENT) -->
+    <section class="page" id="page-take">
+      <div class="take-container">
+        <header class="take-progress-header">
+          <button class="btn-back" data-nav="home">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            <span>Back</span>
+          </button>
+          <div class="progress-track"><div class="progress-fill" id="takeBar"></div></div>
+          <span class="progress-text" id="progressPercent">0%</span>
+        </header>
+        <div class="take-form-wrapper">
+          <div id="takeInfo" class="take-form-header"></div>
+          <!-- ✅ FORM WITH PROPER ID AND NO DEFAULT ACTION -->
+          <form id="takeForm" onsubmit="return false;">
+            <div id="takeQuestions" class="take-questions"></div>
+          </form>
+        </div>
+        <!-- ✅ SUBMIT BUTTON OUTSIDE FORM WITH EXPLICIT CLICK HANDLER -->
+        <div class="submit-wrapper">
+          <button type="button" id="submitBtn" class="btn-submit-modern">
+            <span class="btn-text">Submit Response</span>
+            <span class="btn-glow"></span>
+          </button>
+          <p class="submit-hint">🔒 Your responses are anonymous and secure</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ANALYSIS -->
+    <section class="page" id="page-analysis">
+      <div class="panel-head">
+        <button class="btn-modern ghost" data-nav="my-forms">← Back</button>
+        <div class="export-bar">
+          <select id="dateFilter" class="field-select">
+            <option value="all">All Time</option>
+            <option value="7">Last 7 Days</option>
+            <option value="30">Last 30 Days</option>
+          </select>
+          <button class="btn-modern ghost" data-action="import">📥 Import</button>
+          <button class="btn-modern ghost" data-action="csv">CSV</button>
+          <button class="btn-modern ghost" data-action="pdf">PDF</button>
+        </div>
+      </div>
+      <div id="analysisHead"></div>
+      <div class="summary-grid" id="analysisSummary"></div>
+      <div class="ai-section" id="analysisAI"></div>
+      <div class="analysis-tabs">
+        <button class="tab-btn active" data-tab="charts">📊 Charts</button>
+        <button class="tab-btn" data-tab="responses">📝 Responses</button>
+      </div>
+      <div id="analysisContent"></div>
+      <div id="responsesList" class="hidden"></div>
+      <div class="empty-state hidden" id="analysisEmpty"><div class="empty-icon">📊</div><h3>No responses yet</h3><p>Share your link or import data.</p></div>
+    </section>
+
+    <!-- PROFILE -->
+    <section class="page" id="page-profile">
+      <div class="profile-card">
+        <div class="avatar" id="profAvatar">U</div>
+        <div class="prof-info"><h2 id="profName">Loading</h2><p id="profEmail" class="subtext"></p><span class="badge" id="profRole">User</span></div>
+        <div class="prof-details">
+          <div class="detail"><span>Member Since</span><strong id="profDate">—</strong></div>
+          <div class="detail"><span>Forms Created</span><strong id="profForms">0</strong></div>
+          <div class="detail"><span>Storage Used</span><strong id="profStorage">—</strong></div>
+        </div>
+        <button class="btn-modern ghost full" data-nav="home">← Back to Dashboard</button>
+      </div>
+    </section>
+
+    <!-- SHARE -->
+    <section class="page" id="page-share">
+      <div class="share-card">
+        <h3>Share Questionnaire</h3>
+        <div class="input-group"><label>Direct Link</label><div class="copy-box"><input type="text" id="shareLink" readonly><button class="btn-modern primary" data-action="copy">Copy</button></div></div>
+        <div class="qr-box"><img id="qrImg" src="" alt="QR" style="width:160px;height:160px;object-fit:contain;display:block;"><p class="subtext">Scan with phone camera</p></div>
+        <button class="btn-modern ghost full" data-nav="my-forms">← Back</button>
+      </div>
+    </section>
+  </main>
+
+  <!-- MODALS -->
+  <div class="modal" id="previewModal"><div class="modal-body"><header><h3>Preview</h3><button class="close" data-action="close-modal">✕</button></header><div id="previewContent"></div></div></div>
+  <div class="modal" id="importModal"><div class="modal-body"><header><h3>Import Data</h3><button class="close" data-action="close-import">✕</button></header><div id="importStep1"><p class="subtext">Upload CSV to add responses.</p><input type="file" id="csvFile" accept=".csv" hidden><div class="drop-zone" id="dropZone"><div class="drop-content"><p>📁 Click to browse</p><span class="link">Select CSV</span></div></div></div><div id="importStep2" class="hidden"><p class="subtext">Map columns.</p><div id="mapBox"></div><div class="modal-act"><button class="btn-modern ghost" data-action="import-back">Back</button><button class="btn-modern primary" data-action="confirm-import">Import</button></div></div></div></div>
+  <div class="modal" id="aiGenModal"><div class="modal-body"><header><h3>AI Generator</h3><button class="close" data-action="close-ai-gen">✕</button></header><form id="aiGenForm"><div class="input-group"><label>Topic</label><input type="text" id="aiTopic" required placeholder="e.g., Customer Satisfaction"></div><div class="input-group"><label>Context</label><textarea id="aiContext" rows="2" placeholder="Audience, goals..."></textarea></div><div class="input-group"><label>Count</label><select id="aiCount"><option value="3">3</option><option value="5" selected>5</option><option value="7">7</option></select></div><div id="aiGenStatus" class="msg hidden"></div><button type="submit" class="btn-modern primary full" id="aiGenSubmit">Generate</button></form></div></div>
+  <div class="modal" id="aiAnalyzeModal"><div class="modal-body"><header><h3>AI Insights</h3><button class="close" data-action="close-ai-analyze">✕</button></header><div id="aiAnalyzeContent"></div><div id="aiAnalyzeStatus" class="msg hidden"></div></div></div>
+  <div class="modal" id="responseDetailModal"><div class="modal-body large"><header><h3>Response Detail</h3><button class="close" data-action="close-response">✕</button></header><div id="responseDetailContent"></div></div></div>
+
+  <script src="script.js" defer></script>
+</body>
+</html>

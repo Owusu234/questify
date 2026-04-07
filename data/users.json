@@ -1,0 +1,26 @@
+[
+  {
+    "id": "admin_1775319565904",
+    "name": "System Admin",
+    "email": "admin@questify.com",
+    "password": "$2b$10$IOeGuJYUCwpDec6tLGVVgeC1khVR6jAkQ2u.xgVmSE8eAt7G41DJm",
+    "role": "admin",
+    "createdAt": "2026-04-04T16:19:25.904Z"
+  },
+  {
+    "id": "admin_1775320428935",
+    "name": "System Admin",
+    "email": "pheelz230@gmail.com",
+    "password": "$2b$10$SplE2Utg23c2KE8P9H1TgeZYUodXDfBh5aqZhgXfbCifCo4nuSMPy",
+    "role": "admin",
+    "createdAt": "2026-04-04T16:33:48.935Z"
+  },
+  {
+    "id": "usr_mnkk2q8hk3ypvk",
+    "name": "Felix Owusu",
+    "email": "owusufelix4004@gmail.com",
+    "password": "$2b$10$T8unCxI2zQ3sPNh0X/hfd.ZAHjTfc0EeVn.AVOE7ewDG99817LKw6",
+    "role": "user",
+    "createdAt": "2026-04-04T16:37:26.993Z"
+  }
+]
